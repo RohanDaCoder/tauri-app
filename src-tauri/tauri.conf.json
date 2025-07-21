@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "changelog-tauri",
+  "productName": "radiantgens-changelog-generator",
   "version": "0.1.0",
-  "identifier": "com.rohandacoder.radiant-changelog-generator",
+  "identifier": "com.rohandacoder.radiantgens-changelog-generator",
   "build": {
     "frontendDist": "../src"
   },
@@ -10,7 +10,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "Tauri App",
+        "title": "RadiantGens Changelog Generator",
         "width": 1200,
         "height": 800
       }

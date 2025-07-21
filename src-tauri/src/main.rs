@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    changelog_tauri_lib::run()
+    radiantgens-changelog-generator_lib::run()
 }
