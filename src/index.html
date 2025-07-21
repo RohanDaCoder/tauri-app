@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Changelog Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        radiant: {
+                            start: '#FB0808',
+                            end: '#FF8800',
+                        },
+                        discord: {
+                            dark: '#202225',
+                            darker: '#18191c',
+                            card: '#2f3136',
+                            input: '#40444b',
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        /* Custom scrollbar styles */
+        .app-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .app-container::-webkit-scrollbar-track {
+            background: #1e1f22;
+            border-radius: 4px;
+        }
+
+        .app-container::-webkit-scrollbar-thumb {
+            background: #424549;
+            border-radius: 4px;
+        }
+
+        .app-container::-webkit-scrollbar-thumb:hover {
+            background: #5d6269;
+        }
+
+        .entries::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .entries::-webkit-scrollbar-track {
+            background: #2a2d31;
+            border-radius: 3px;
+        }
+
+        .entries::-webkit-scrollbar-thumb {
+            background: #424549;
+            border-radius: 3px;
+        }
+
+        .entries::-webkit-scrollbar-thumb:hover {
+            background: #5d6269;
+        }
+
+        .json-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .json-container::-webkit-scrollbar-track {
+            background: #2b2d31;
+            border-radius: 3px;
+        }
+
+        .json-container::-webkit-scrollbar-thumb {
+            background: #424549;
+            border-radius: 3px;
+        }
+
+        .json-container::-webkit-scrollbar-thumb:hover {
+            background: #5d6269;
+        }
+    </style>
+</head>
+
+<body class="bg-discord-darker text-gray-300 h-screen overflow-hidden flex flex-col">
+    <!-- Title Bar -->
+    <!-- Removed custom window control buttons to use default OS buttons -->
+
+    <!-- Main App Container -->
+    <div
+        class="app-container max-w-[1200px] h-[calc(100vh-8rem)] mt-20 mx-auto px-5 overflow-hidden flex flex-col w-full min-h-0">
+        <header class="header text-center mb-5 pt-5">
+            <h1
+                class="text-transparent bg-clip-text bg-gradient-to-r from-radiant-start to-radiant-end font-extrabold text-4xl md:text-6xl mb-2 select-none">
+                Radiant Gens
+            </h1>
+            <p class="text-gray-400 select-none">Changelog Generator</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
+            <!-- Changelog Editor -->
+            <div class="flex flex-col min-h-0 lg:col-span-2">
+                <div
+                    class="discord-card bg-discord-card rounded-lg border border-[#25272b] shadow-lg flex flex-col overflow-hidden h-full">
+                    <div
+                        class="card-header bg-[#25272b] border-b border-[#1e2025] flex items-center px-4 py-3 select-none">
+                        <i class="fas fa-edit text-red-600 mr-3"></i>
+                        <h2 class="font-semibold text-gray-200">Changelog Editor</h2>
+                    </div>
+                    <div class="card-content flex flex-col flex-1 p-4 overflow-hidden min-h-0">
+                        <div id="categoriesContainer" class="flex-1 overflow-y-auto min-h-0 space-y-4">
+                            <div
+                                class="category-card bg-[#36393f] rounded-lg border border-[#2a2d31] flex flex-col overflow-hidden">
+                                <div class="category-header bg-[#2a2d31] flex justify-between items-center px-4 py-3">
+                                    <h3 class="font-semibold flex items-center text-gray-200 text-lg select-none">
+                                        <i class="fas fa-folder mr-2 text-blue-400"></i>
+                                        Category #1
+                                    </h3>
+                                    <button
+                                        class="remove-cat text-red-500 hover:text-red-400 text-sm flex items-center">
+                                        <i class="fas fa-trash mr-1"></i> Remove
+                                    </button>
+                                </div>
+                                <div class="entries max-h-[300px] overflow-y-auto">
+                                    <div
+                                        class="entry-row flex items-center border-b border-[#2a2d31] px-4 py-2 hover:bg-[#2f3136] transition-colors duration-200">
+                                        <button
+                                            class="remove-entry text-red-600 hover:bg-red-700 hover:text-white rounded-md w-8 h-8 flex items-center justify-center opacity-0 transition-opacity duration-200 mr-2"
+                                            aria-label="Remove entry">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        <input type="text"
+                                            class="entry-input flex-grow bg-discord-input border border-[#2a2d31] rounded-md px-3 py-2 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                                            placeholder="New feature description..." />
+                                        <div class="drag-handle text-gray-400 cursor-move ml-3 w-8 h-8 flex items-center justify-center rounded-md hover:bg-blue-100 hover:text-blue-600 transition-colors duration-200 select-none"
+                                            aria-label="Drag handle">
+                                            <i class="fas fa-grip-lines"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <button
+                                        class="add-entry btn w-full bg-[#4f545c] hover:bg-[#5d6269] text-white rounded-md py-2 flex items-center justify-center transition-colors duration-200">
+                                        <i class="fas fa-plus mr-2"></i> Add Entry
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap justify-between items-center mt-6 gap-4 select-none">
+                            <button id="addCategory"
+                                class="btn btn-primary bg-gradient-to-r from-radiant-start to-radiant-end text-white rounded-md py-2 px-4 font-semibold flex items-center justify-center transition duration-200 hover:opacity-90 hover:-translate-y-0.5">
+                                <i class="fas fa-plus mr-2"></i> Add Category
+                            </button>
+
+                            <div class="flex space-x-3">
+                                <span id="categoryCount"
+                                    class="count-badge bg-blue-600 text-white rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap select-text">1
+                                    category</span>
+                                <span id="entryCount"
+                                    class="count-badge bg-blue-600 text-white rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap select-text">1
+                                    entry</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JSON Output -->
+            <div class="flex flex-col min-h-0">
+                <div
+                    class="discord-card bg-discord-card rounded-lg border border-[#25272b] shadow-lg flex flex-col overflow-hidden h-full">
+                    <div
+                        class="card-header bg-[#25272b] border-b border-[#1e2025] flex items-center px-4 py-3 select-none">
+                        <i class="fas fa-code text-gray-400 mr-3"></i>
+                        <h2 class="font-semibold text-gray-200">JSON Output</h2>
+                    </div>
+                    <div class="card-content flex flex-col flex-1 p-4 overflow-hidden min-h-0">
+                        <div class="controls-grid grid grid-cols-[1fr_auto] gap-2 mb-4">
+                            <button id="generateJson"
+                                class="btn btn-primary bg-gradient-to-r from-radiant-start to-radiant-end text-white rounded-md py-2 px-4 font-semibold flex items-center justify-center transition duration-200 hover:opacity-90 hover:-translate-y-0.5">
+                                <i class="fas fa-cogs mr-2"></i> Generate JSON
+                            </button>
+                            <button id="copyJson"
+                                class="btn btn-icon bg-[#4f545c] hover:bg-[#5d6269] text-gray-300 rounded-md w-9 h-9 flex items-center justify-center disabled:opacity-50"
+                                disabled aria-label="Copy JSON">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <button id="sendJson"
+                            class="btn btn-secondary bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 px-4 font-semibold w-full mb-4 disabled:opacity-50 flex items-center justify-center gap-2"
+                            disabled>
+                            <i class="fas fa-paper-plane"></i> Send to Discord
+                        </button>
+
+                        <div class="json-container flex flex-col flex-1 min-h-0 relative">
+                            <div id="jsonPlaceholder"
+                                class="absolute inset-0 flex flex-col items-center justify-center bg-[#2b2d31] rounded select-none p-4 text-center">
+                                <i class="fas fa-arrow-up text-2xl mb-3"></i>
+                                <p class="text-gray-500">
+                                    Add your changelog details<br />and click "Generate JSON"
+                                </p>
+                            </div>
+                            <textarea id="outputJson"
+                                class="json-output w-full min-h-[150px] bg-[#2b2d31] border border-[#25272b] rounded-md p-3 text-gray-400 font-mono text-sm resize-y outline-none leading-relaxed flex-1"
+                                readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer text-center py-5 text-gray-500 text-sm select-none flex-shrink-0">
+            <p>Made by rohan_ohio</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const WEBHOOK_URL =
+                'https://discord.com/api/webhooks/1357729248131027098/9Ok-AGA4vGGzMFpQL_1tupVhBuSCNjZNMG1pK6oroUd3quWTeef3PSaX6J9XXK95lgev';
+            const emojiMap = {
+                Added: '🆕',
+                Improved: '🛠',
+                Fixed: '🔧',
+                Changed: '🔄',
+                Deprecated: '⚠️',
+                Removed: '🗑️',
+            };
+
+            let catIndex = 1;
+            let generatedJson = null;
+
+            // Update counters function
+            function updateCounters() {
+                const catCount = document.querySelectorAll('.category-card').length;
+                const entryCount = document.querySelectorAll('.entry-input').length;
+                document.getElementById(
+                    'categoryCount'
+                ).textContent = `${catCount} ${catCount === 1 ? 'category' : 'categories'}`;
+                document.getElementById(
+                    'entryCount'
+                ).textContent = `${entryCount} ${entryCount === 1 ? 'entry' : 'entries'}`;
+            }
+
+            // Create a new category
+            function createCategory() {
+                const catEl = document.createElement('div');
+                catEl.className =
+                    'category-card bg-[#36393f] rounded-lg border border-[#2a2d31] flex flex-col overflow-hidden';
+                catEl.innerHTML = `
+          <div class="category-header bg-[#2a2d31] flex justify-between items-center px-4 py-3">
+            <h3 class="font-semibold flex items-center text-gray-200 text-lg select-none">
+              <i class="fas fa-folder mr-2 text-blue-400"></i>
+              Category #${catIndex + 1}
+            </h3>
+            <button class="remove-cat text-red-500 hover:text-red-400 text-sm flex items-center">
+              <i class="fas fa-trash mr-1"></i> Remove
+            </button>
+          </div>
+          <div class="entries max-h-[300px] overflow-y-auto"></div>
+          <div class="p-3">
+            <button class="add-entry btn w-full bg-[#4f545c] hover:bg-[#5d6269] text-white rounded-md py-2 flex items-center justify-center transition-colors duration-200">
+              <i class="fas fa-plus mr-2"></i> Add Entry
+            </button>
+          </div>
+        `;
+
+                // Add initial entry
+                const entriesContainer = catEl.querySelector('.entries');
+                entriesContainer.appendChild(createEntry());
+
+                catIndex++;
+                return catEl;
+            }
+
+            // Create a new entry
+            function createEntry() {
+                const entryEl = document.createElement('div');
+                entryEl.className =
+                    'entry-row flex items-center border-b border-[#2a2d31] px-4 py-2 hover:bg-[#2f3136] transition-colors duration-200';
+                entryEl.innerHTML = `
+          <button class="remove-entry text-red-600 hover:bg-red-700 hover:text-white rounded-md w-8 h-8 flex items-center justify-center opacity-0 transition-opacity duration-200 mr-2" aria-label="Remove entry">
+            <i class="fas fa-times"></i>
+          </button>
+          <input type="text" class="entry-input flex-grow bg-discord-input border border-[#2a2d31] rounded-md px-3 py-2 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-blue-500" placeholder="Changelog detail...">
+          <div class="drag-handle text-gray-400 cursor-move ml-3 w-8 h-8 flex items-center justify-center rounded-md hover:bg-blue-100 hover:text-blue-600 transition-colors duration-200 select-none" aria-label="Drag handle">
+            <i class="fas fa-grip-lines"></i>
+          </div>
+        `;
+                return entryEl;
+            }
+
+            // Add category button
+            document.getElementById('addCategory').addEventListener('click', function () {
+                const container = document.getElementById('categoriesContainer');
+                container.appendChild(createCategory());
+                updateCounters();
+            });
+
+            // Event delegation for dynamic elements
+            document.addEventListener('click', function (e) {
+                // Remove category
+                if (e.target.closest('.remove-cat')) {
+                    const card = e.target.closest('.category-card');
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(-20px)';
+                    setTimeout(() => {
+                        card.remove();
+                        updateCounters();
+                    }, 300);
+                }
+
+                // Add entry
+                if (e.target.closest('.add-entry')) {
+                    const card = e.target.closest('.category-card');
+                    const entries = card.querySelector('.entries');
+                    entries.appendChild(createEntry());
+                    updateCounters();
+                }
+
+                // Remove entry
+                if (e.target.closest('.remove-entry')) {
+                    const entry = e.target.closest('.entry-row');
+                    entry.style.opacity = '0';
+                    entry.style.transform = 'translateX(-10px)';
+                    setTimeout(() => {
+                        entry.remove();
+                        updateCounters();
+                    }, 300);
+                }
+            });
+
+            // Generate JSON
+            document.getElementById('generateJson').addEventListener('click', function () {
+                const timestamp = new Date().toISOString();
+
+                const categories = [];
+                document.querySelectorAll('.category-card').forEach((card) => {
+                    // For simplicity, we'll use a fixed category type in this example
+                    const label = 'Added';
+                    const entries = Array.from(card.querySelectorAll('.entry-input'))
+                        .map((input) => input.value.trim())
+                        .filter((text) => text !== '');
+                    categories.push({ label, entries });
+                });
+
+                const fields = categories.map((cat) => ({
+                    name: `${emojiMap[cat.label] || '📝'} ${cat.label}`,
+                    value: cat.entries
+                        .map((e) => `<:empty:1357591272327741460> <:subentry:1357591675580710942> ${e}`)
+                        .join('\n'),
+                    inline: false,
+                }));
+
+                generatedJson = {
+                    embeds: [
+                        {
+                            title: '📜 Changelog',
+                            description: '**Recent Updates:**',
+                            timestamp,
+                            color: 0xff8800,
+                            footer: { text: 'Changelog Generator' },
+                            fields,
+                        },
+                    ],
+                    attachments: [],
+                    webhook_id: '',
+                    components: [],
+                };
+
+                const jsonString = JSON.stringify(generatedJson, null, 2);
+                document.getElementById('outputJson').value = jsonString;
+                document.getElementById('jsonPlaceholder').style.display = 'none';
+                document.getElementById('copyJson').disabled = false;
+                document.getElementById('copyJson').classList.remove('opacity-50');
+                document.getElementById('sendJson').disabled = false;
+                document.getElementById('sendJson').classList.remove('opacity-50');
+            });
+
+            // Copy JSON to clipboard
+            document.getElementById('copyJson').addEventListener('click', function () {
+                const jsonText = document.getElementById('outputJson').value;
+                if (jsonText) {
+                    navigator.clipboard.writeText(jsonText);
+                    const originalHTML = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        this.innerHTML = originalHTML;
+                    }, 2000);
+                }
+            });
+
+            // Send JSON to Discord
+            document.getElementById('sendJson').addEventListener('click', async function () {
+                if (!generatedJson) return;
+
+                const btn = this;
+                const originalText = btn.innerHTML;
+
+                // Show loading state
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
+                btn.disabled = true;
+
+                try {
+                    const response = await fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(generatedJson),
+                    });
+
+                    if (response.ok) {
+                        btn.innerHTML = '<i class="fas fa-check mr-2"></i> Sent!';
+                        btn.classList.add('bg-green-600');
+                    } else {
+                        throw new Error(`Failed to send: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error('Error sending to Discord:', error);
+                    btn.innerHTML = '<i class="fas fa-times mr-2"></i> Failed';
+                    btn.classList.add('bg-red-600');
+                }
+
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.classList.remove('bg-green-600', 'bg-red-600');
+                }, 3000);
+            });
+
+            // Window controls
+            document.getElementById('minimizeBtn').addEventListener('click', function () {
+                window.electronAPI.windowControl('minimize');
+            });
+
+            document.getElementById('maximizeBtn').addEventListener('click', function () {
+                window.electronAPI.windowControl('maximize');
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('fa-square')) {
+                    icon.classList.remove('fa-square');
+                    icon.classList.add('fa-clone');
+                } else {
+                    icon.classList.remove('fa-clone');
+                    icon.classList.add('fa-square');
+                }
+            });
+
+            document.getElementById('closeBtn').addEventListener('click', function () {
+                window.electronAPI.windowControl('close');
+            });
+
+            // Initialize counters
+            updateCounters();
+        });
+    </script>
+</body>
+
+</html>
